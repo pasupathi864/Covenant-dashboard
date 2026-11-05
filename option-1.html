@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Royalty Signals (Option 1: tabs)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f6f7f7}
+a{color:#1b6b41}a:hover{color:#124d2e}
+.mn *{box-sizing:border-box}
+.mn{height:100vh;display:flex;flex-direction:column;background:#f6f7f7;color:#14231a;font:14px/1.45 Inter,system-ui,sans-serif}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.field{border:1px solid #dfe3e1;border-radius:8px;background:#fff;min-height:36px;padding:0 10px;font:13px Inter,system-ui,sans-serif;color:#14231a}
+.search{display:flex;align-items:center;gap:8px;border:1px solid #dfe3e1;border-radius:8px;background:#fff;min-height:36px;padding:0 10px;color:#7a857f;width:240px;max-width:100%}
+.search input{all:unset;flex:1;min-width:0;font:13px Inter,system-ui,sans-serif;color:#14231a}
+.search:focus-within{outline:2px solid #1f7a4a;outline-offset:1px}
+.tabs{display:flex;gap:20px;border-bottom:1px solid #e7eae8;flex:none}
+.tab{all:unset;box-sizing:border-box;cursor:pointer;padding:0 2px;min-height:40px;font:500 13px Inter,system-ui,sans-serif;color:#66716b;border-bottom:2px solid transparent;margin-bottom:-1px;display:inline-flex;align-items:center;gap:6px}
+.tab:hover{color:#14231a}
+.tab.on{color:#14231a;font-weight:600;border-bottom-color:#14231a}
+.tab small{font-size:11px;color:#8a948f;font-weight:500}
+.fl{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:#3c4741;border:1px solid #dfe3e1;border-radius:999px;padding:2px 4px 2px 9px;background:#fff;white-space:nowrap}
+.fl i{width:6px;height:6px;border-radius:50%;display:inline-block}
+.fl b{font-size:11px;font-weight:700;background:#f1f3f2;border-radius:999px;padding:0 7px;min-width:20px;text-align:center}
+.st{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;white-space:nowrap}
+.st i{width:7px;height:7px;border-radius:50%;display:inline-block}
+.muted{color:#7a857f}
+.late{color:#a5381f;font-weight:600}
+.iconbtn{all:unset;box-sizing:border-box;cursor:pointer;min-height:32px;padding:0 10px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;color:#3c4741;border:1px solid #dfe3e1;background:#fff;font:600 12px Inter,system-ui,sans-serif;text-decoration:none}
+.iconbtn:hover{background:#f1f3f2;color:#14231a}
+.tab:focus-visible,.iconbtn:focus-visible,.field:focus-visible{outline:2px solid #1f7a4a;outline-offset:2px}
+
+.lsw{display:inline-flex;gap:2px;padding:3px;background:#f1f3f2;border-radius:9px}
+.lsb{min-width:34px;height:28px;padding:0 8px;display:inline-grid;place-items:center;border-radius:7px;font:600 12.5px Inter,system-ui,sans-serif;color:#4a5850;text-decoration:none}
+.lsb:hover{color:#14231a;background:#e4e8e6}
+.lsb.on{background:#fff;color:#14231a;box-shadow:0 1px 2px rgba(20,35,26,.14)}
+.lsb:focus-visible{outline:2px solid #1f7a4a;outline-offset:2px}
+.maintabs{display:inline-flex;gap:2px;padding:3px;background:#e9edeb;border-radius:10px;align-self:flex-start;flex:none}
+.mtab{all:unset;box-sizing:border-box;cursor:pointer;min-height:34px;padding:0 16px;border-radius:8px;font:600 13px Inter,system-ui,sans-serif;color:#4a5850;display:inline-flex;align-items:center;gap:8px}
+.mtab small{font-size:11px;font-weight:600;color:#7a857f;background:#dfe4e1;border-radius:999px;padding:0 7px}
+.mtab:hover{color:#14231a}
+.mtab.on{background:#fff;color:#14231a;box-shadow:0 1px 2px rgba(20,35,26,.14)}
+.mtab.on small{background:#e8f3ec;color:#1b6b41}
+.mtab:focus-visible{outline:2px solid #1f7a4a;outline-offset:2px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{all:unset;box-sizing:border-box;cursor:pointer;min-height:30px;padding:0 12px;border:1px solid #dfe3e1;border-radius:999px;background:#fff;font:500 12px Inter,system-ui,sans-serif;color:#3c4741;display:inline-flex;align-items:center;gap:6px}
+.chip i{width:6px;height:6px;border-radius:50%;display:inline-block}
+.chip small{font-size:11px;color:#7a857f;font-weight:600}
+.chip.on{background:#14231a;border-color:#14231a;color:#fff}
+.chip.on small{color:#c9d3cd}
+.chip:focus-visible{outline:2px solid #1f7a4a;outline-offset:2px}
+.wrap{background:#fff;border:1px solid #e7eae8;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
+.tscroll{flex:1 1 auto;min-height:0;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{position:sticky;top:0;z-index:1;text-align:left;font-size:11.5px;font-weight:600;color:#66716b;padding:10px 14px;background:#fafbfa;border-bottom:1px solid #e7eae8;white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid #f0f2f1;white-space:nowrap;vertical-align:middle}
+tbody tr:hover td{background:#fafbfa}
+.dlink{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-weight:700;color:#14231a;border-radius:6px;padding:2px 4px;margin:-2px -4px}
+.dlink .dico{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:#e8f3ec;color:#1b6b41;transition:background .12s,color .12s}
+.dlink:hover{color:#1b6b41}
+.dlink:hover .dico{background:#1f7a4a;color:#fff}
+.dlink:focus-visible{outline:2px solid #1f7a4a;outline-offset:3px;border-radius:3px}
+.vcue{display:inline-flex;align-items:center;gap:2px;font-size:12px;font-weight:600;color:#7a857f;margin-left:10px;transition:transform .12s}
+tr.crow:hover .vcue{color:#1b6b41;transform:translateX(2px)}
+.mback{position:fixed;inset:0;background:rgba(20,35,26,.38);display:grid;place-items:center;z-index:50;padding:24px}
+.mbox{background:#fff;border-radius:14px;width:min(560px,100%);max-height:86vh;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(20,35,26,.22);overflow:hidden}
+.mhead{padding:18px 20px 14px;border-bottom:1px solid #e7eae8;display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.mbody{overflow:auto;flex:1 1 auto;min-height:0}
+.mbody th{top:0}
+.mbody td{white-space:normal}
+.cmp{display:grid;grid-template-columns:auto auto;column-gap:10px;row-gap:2px;font-size:12px;align-items:baseline}
+.cmp small{color:#7a857f;font-size:11px}
+.cmp b{font-variant-numeric:tabular-nums;font-weight:600;color:#24302a}
+.pct{display:inline-block;margin-top:5px;font-size:11.5px;font-weight:700;border-radius:999px;padding:1px 8px}
+.mfoot{padding:12px 20px;border-top:1px solid #e7eae8;display:flex;justify-content:space-between;align-items:center;gap:12px;background:#fafbfa}
+.mx{all:unset;cursor:pointer;width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:#4a5850;flex:none}
+.mx:hover{background:#f1f3f2}
+.mx:focus-visible{outline:2px solid #1f7a4a}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+button.chatbtn{cursor:pointer}
+.chatbtn{display:inline-flex;align-items:center;gap:6px;min-height:30px;padding:0 10px;border:1px solid #dfe3e1;border-radius:8px;background:#fff;color:#1b6b41;font:600 12px Inter,system-ui,sans-serif;text-decoration:none;white-space:nowrap}
+.chatbtn:hover{background:#e8f3ec;border-color:#9fd0b3;color:#1b6b41}
+.mhead .chatbtn{background:#1f7a4a;border-color:#1f7a4a;color:#fff;min-height:36px;padding:0 14px;font-size:13px}
+.mhead .chatbtn:hover{background:#18643c;border-color:#18643c;color:#fff}
+.chatbtn:focus-visible{outline:2px solid #1f7a4a;outline-offset:2px}
+.foot{flex:none;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 16px;border-top:1px solid #e7eae8;font-size:12.5px;color:#66716b}
+.pg{all:unset;box-sizing:border-box;cursor:pointer;min-width:30px;height:30px;border-radius:6px;display:inline-grid;place-items:center;font:500 12.5px Inter,system-ui,sans-serif;color:#3c4741}
+.pg:hover{background:#f1f3f2}
+.pg.on{background:#e8f3ec;color:#1b6b41;font-weight:700}
+.pg[disabled]{opacity:.35;cursor:default}
+.pg:focus-visible{outline:2px solid #1f7a4a;outline-offset:2px}
+.kpis{display:flex;gap:28px;flex-wrap:wrap;flex:none}
+.kpi b{display:block;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.kpi span{font-size:12px;color:#7a857f}
+@media (max-width:700px){.mn{height:auto}.tscroll{overflow-x:auto;overflow-y:visible}}
+.fwrap{position:relative}
+.dwrap{position:relative}
+.dbtn{all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 10px 0 12px;border:1px solid #dfe3e1;border-radius:8px;background:#fff;font:600 13px Inter,system-ui,sans-serif;color:#24302a;display:inline-flex;align-items:center;gap:8px}
+.dbtn:hover{border-color:#c9d2cd}
+.dbtn.active{border-color:#1f7a4a;color:#1b6b41;background:#f4faf6}
+.dbtn:focus-visible{outline:2px solid #1f7a4a;outline-offset:2px}
+.dpop{position:absolute;right:0;top:calc(100% + 6px);z-index:30;display:grid;grid-template-columns:240px;background:#fff;border:1px solid #e1e5e3;border-radius:12px;box-shadow:0 16px 40px rgba(20,35,26,.16);overflow:hidden}
+.dpre{background:#f6f8f7;border-right:1px solid #eef0ef;padding:12px 8px;display:flex;flex-direction:column;gap:1px;max-height:470px;overflow:auto}
+.dhead{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#7a857f;padding:10px 8px 4px}
+.dsub{font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#a3aca7;padding:8px 8px 2px}
+.dpo{all:unset;box-sizing:border-box;cursor:pointer;padding:6px 8px;border-radius:6px;font:500 13px Inter,system-ui,sans-serif;color:#24302a}
+.dpo:hover{background:#e9eeeb}
+.dpo.on{background:#e8f3ec;color:#1b6b41;font-weight:600}
+.dinput{box-sizing:border-box;width:100%;min-height:36px;padding:0 10px;border:1px solid #dfe3e1;border-radius:8px;background:#fff;font:500 13px Inter,system-ui,sans-serif;color:#14231a}
+.dinput:focus{outline:2px solid #1f7a4a;outline-offset:1px;border-color:#1f7a4a}
+.dsel{font-size:12.5px;color:#4a5850;text-align:center;margin-top:8px}
+.dcal{padding:12px 14px 12px;display:flex;flex-direction:column;gap:4px}
+.dcal .dhead{padding-left:0}
+.dlab{font-size:11.5px;color:#7a857f;font-weight:500;margin-top:4px}
+.dfield{display:flex;align-items:center;gap:8px;min-height:34px;padding:0 10px;border:1px solid #dfe3e1;border-radius:8px;font-size:13px;color:#14231a;font-variant-numeric:tabular-nums}
+.dfield svg{color:#3d6fb4}
+.dfield.ph{color:#a3aca7}
+.dfield.act{border-color:#1f7a4a;box-shadow:0 0 0 3px rgba(31,122,74,.12)}
+.dmonth{display:flex;align-items:center;justify-content:space-between;margin:6px 0 4px}
+.dmonth b{font-size:14px}
+.dnav{all:unset;cursor:pointer;width:28px;height:28px;border-radius:6px;display:grid;place-items:center;font-size:20px;color:#1b6b41}
+.dnav:hover{background:#eef3f0}
+.dnav[disabled]{color:#cfd5d2;cursor:default;background:none}
+.dgrid{display:grid;grid-template-columns:repeat(7,1fr);row-gap:2px}
+.dwk{font-size:11px;color:#a3aca7;text-align:center;padding:4px 0}
+.dday{all:unset;box-sizing:border-box;cursor:pointer;height:32px;display:grid;place-items:center;font:500 13px Inter,system-ui,sans-serif;color:#24302a;font-variant-numeric:tabular-nums}
+.dday:hover{background:#dcebe1;border-radius:6px}
+.dday.out{color:#b4bcb7}
+.dday.inr{background:#e3f1e8}
+.dday.edge{background:#1f7a4a;color:#fff;font-weight:700;border-radius:6px}
+.dday.today{box-shadow:inset 0 0 0 1.5px #1f7a4a;border-radius:6px}
+.dday[disabled]{color:#d3d8d5;cursor:default;background:none}
+.dfoot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid #eef0ef}
+.fdone[disabled]{opacity:.45;cursor:default}
+.fbtn{all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border:1px solid #dfe3e1;border-radius:8px;background:#fff;font:600 13px Inter,system-ui,sans-serif;color:#24302a;display:inline-flex;align-items:center;gap:8px}
+.fbtn:hover,.fbtn.open{border-color:#b9c3be;background:#fafbfa}
+.fbtn.active{border-color:#1f7a4a}
+.fact{font-size:12px;font-weight:600;color:#1b6b41;background:#e8f3ec;border-radius:999px;padding:1px 8px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fmenu{position:absolute;right:0;top:calc(100% + 6px);z-index:20;width:320px;max-width:calc(100vw - 32px);background:#fff;border:1px solid #e1e5e3;border-radius:12px;box-shadow:0 12px 32px rgba(20,35,26,.14);padding:10px;display:flex;flex-direction:column;gap:2px}
+.fsec{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#7a857f;padding:10px 8px 4px}
+.fopt{all:unset;box-sizing:border-box;cursor:pointer;width:100%;min-height:34px;padding:0 8px;border-radius:7px;display:flex;align-items:center;gap:8px;font:500 13px Inter,system-ui,sans-serif;color:#24302a}
+.fopt:hover{background:#f4f6f5}
+.fopt small{font-size:11.5px;color:#7a857f;font-weight:600}
+.fopt .ck{visibility:hidden;color:#1f7a4a}
+.fopt.on{background:#eef7f1;color:#14231a;font-weight:600}
+.fopt.on .ck{visibility:visible}
+.fdotw{width:8px;display:inline-flex;justify-content:center}
+.fdotw i{width:7px;height:7px;border-radius:50%;display:inline-block}
+.ffoot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eef0ef;margin-top:6px;padding:8px 4px 0}
+.flink{all:unset;cursor:pointer;font:600 12px Inter,system-ui,sans-serif;color:#66716b;padding:4px}
+.flink:hover{color:#14231a}
+.fdone{all:unset;cursor:pointer;font:600 12px Inter,system-ui,sans-serif;color:#fff;background:#1f7a4a;border-radius:7px;padding:0 12px;min-height:30px;display:inline-flex;align-items:center}
+.fbtn:focus-visible,.fopt:focus-visible,.flink:focus-visible,.fdone:focus-visible{outline:2px solid #1f7a4a;outline-offset:2px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;flex:none}
+.stat{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border:1px solid #e7eae8;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;font:inherit;color:inherit}
+.stat:hover{border-color:#cfd6d2}
+.stat.on{border-color:#14231a;box-shadow:inset 0 0 0 1px #14231a}
+.stat.static{cursor:default}
+.stat.lowv .sval{margin-top:12px}
+.stat.static:hover{border-color:#e7eae8}
+.slabel{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:500;color:#66716b}
+.slabel i{width:7px;height:7px;border-radius:50%;display:inline-block}
+.sval{font-size:24px;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums}
+.ssub{font-size:11.5px;color:#8a948f}
+.stat:focus-visible{outline:2px solid #1f7a4a;outline-offset:2px}
+@media (max-width:900px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cbx{width:16px;height:16px;flex:none;border:1.5px solid #c3cac6;border-radius:4px;background:#fff;display:grid;place-items:center;color:#fff}
+.cbx svg{visibility:hidden}
+.cbx.on{background:#1f7a4a;border-color:#1f7a4a}
+.cbx.on svg{visibility:visible}
+.stat{position:relative}
+.stat:not(.static):hover{border-color:#9fd0b3;box-shadow:0 2px 10px rgba(20,35,26,.06)}
+.stat.on{background:#f4faf6;border-color:#1f7a4a;box-shadow:inset 0 0 0 1px #1f7a4a}
+.sact{position:absolute;top:12px;right:12px;display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#66716b;border:1px solid #e1e5e3;border-radius:999px;padding:2px 8px;background:#fff;white-space:nowrap}
+.stat:not(.static):hover .sact{color:#1b6b41;border-color:#9fd0b3;background:#e8f3ec}
+.stat.on .sact,.stat.on:hover .sact{background:#1f7a4a;border-color:#1f7a4a;color:#fff}
+.shint-unused{font-size:12px;color:#7a857f;margin-top:-6px;display:flex;align-items:center;gap:6px;flex:none}
+.sico{margin-left:auto;color:#9aa69e}
+.stat:not(.static):hover .sico{color:#1f7a4a}
+.stat.on .sico{color:#1f7a4a}
+.sbar{display:block;height:5px;border-radius:999px;background:#e7eae8;overflow:hidden;margin:2px 0 1px}
+.sbar span{display:block;height:5px;background:#1f7a4a;border-radius:999px}
+.datef{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 4px 0 12px;border:1px solid #dfe3e1;border-radius:8px;background:#fff;font:600 13px Inter,system-ui,sans-serif;color:#24302a}
+.datef.active{border-color:#1f7a4a}
+.datef select{all:unset;cursor:pointer;font:600 12px Inter,system-ui,sans-serif;color:#1b6b41;background:#e8f3ec;border-radius:999px;padding:2px 10px;margin-right:4px}
+.datef:focus-within{outline:2px solid #1f7a4a;outline-offset:2px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="text/x-template" id="tpl">
+
+<div class="mn">
+  <header style="background: #ffffff; border-bottom: 1px solid #e7eae8; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex: none">
+    <span style="font-weight: 700; font-size: 16px">Pixie</span>
+    <nav class="lsw" aria-label="Switch layout"><a class="lsb on" href="option-1.html" title="Option 1: Deals and revenue tabs" aria-label="Option 1: Deals and revenue tabs" aria-current="page">1</a><a class="lsb" href="option-2.html" title="Option 2: Split view" aria-label="Option 2: Split view">2</a></nav>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="font-size: 11px; color: #7a857f">Sample operators, wells and values</span>
+      <div style="width: 30px; height: 30px; border-radius: 50%; background: #e8f3ec; display: grid; place-items: center; font-weight: 600; font-size: 11px" aria-label="Signed in user">SS</div>
+    </div>
+  </header>
+
+  <main style="max-width: 1360px; width: 100%; margin: 0 auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; flex: 1 1 auto; min-height: 0">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; flex: none">
+      <div>
+        <h1 style="font-size: 22px; font-weight: 700; margin: 0">Royalty Signals</h1>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; flex: none">
+      <div class="maintabs" role="tablist" aria-label="Section">
+        <button class="{{tabDeals}}" role="tab" aria-selected="{{isDeals}}" onClick="{{goDeals}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"></path><path d="M14 3v5h5"></path><path d="M10 13h6M10 17h4"></path></svg>DO Approval <small>{{dealsCount}}</small></button>
+        <button class="{{tabRev}}" role="tab" aria-selected="{{isRev}}" onClick="{{goRev}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19h16"></path><path d="M7 15l4-4 3 3 5-6"></path></svg>Revenue <small>{{revCount}}</small></button>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+      <div class="fwrap">
+        <button class="{{fbtnCls}}" onClick="{{toggleMenu}}" aria-haspopup="true" aria-expanded="{{menuOpen}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16l-6 7.5V19l-4 1.5v-8z"></path></svg>{{secTitle}}<sc-if value="{{hasActive}}" hint-placeholder-val="{{ false }}"><span class="fact">{{activeLabel}}</span></sc-if><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="transform: {{menuRot}}"><path d="M6 9l6 6 6-6"></path></svg></button>
+        <sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+          <div class="fmenu" role="dialog" aria-label="Filter by flag">
+            <sc-for list="{{chips}}" as="c" hint-placeholder-count="5"><button class="{{c.cls}}" role="menuitemcheckbox" aria-checked="{{c.on}}" onClick="{{c.pick}}"><span class="{{c.boxCls}}" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg></span><span class="fdotw"><sc-if value="{{c.hasDot}}" hint-placeholder-val="{{ false }}"><i style="background: {{c.color}}" aria-hidden="true"></i></sc-if></span><span style="flex: 1">{{c.label}}</span><small>{{c.count}}</small></button></sc-for>
+            <div class="ffoot"><button class="flink" onClick="{{clearAll}}">Clear</button><button class="fdone" onClick="{{toggleMenu}}">Done</button></div>
+          </div>
+        </sc-if>
+      </div>
+        <div class="dwrap">
+          <button class="{{dateBtnCls}}" onClick="{{toggleCal}}" aria-haspopup="dialog" aria-expanded="{{calOpen}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 2.5v4M16 2.5v4"></path></svg><span>{{dateLabel}}</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="transform: {{calRot}}"><path d="M6 9l6 6 6-6"></path></svg></button>
+          <sc-if value="{{calOpen}}" hint-placeholder-val="{{ false }}">
+            <div class="dpop" role="dialog" aria-label="Filter by last update date">
+              <div class="dcal">
+                <label class="dlab" for="dfrom">From</label>
+                <input id="dfrom" class="dinput" type="date" value="{{fromVal}}" onChange="{{onFrom}}" onInput="{{onFrom}}">
+                <label class="dlab" for="dto">To</label>
+                <input id="dto" class="dinput" type="date" value="{{toVal}}" onChange="{{onTo}}" onInput="{{onTo}}">
+                <div class="dfoot"><button class="flink" onClick="{{clearCal}}">Show all dates</button><button class="fdone" onClick="{{applyCal}}" disabled="{{applyOff}}">Apply</button></div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+        <div class="search" style="width: 260px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg><label for="tbq" class="sr">Search</label><input id="tbq" placeholder="{{searchPh}}" value="{{q}}" onInput="{{onQ}}"></div>
+      </div>
+    </div>
+
+    <div class="stats" style="grid-template-columns: repeat({{statCols}}, minmax(0, 1fr))">
+      <sc-for list="{{stats}}" as="t" hint-placeholder-count="4">
+        <button class="{{t.cls}}" onClick="{{t.pick}}" aria-pressed="{{t.on}}" title="{{t.tip}}">
+          <span class="slabel" style="font-weight: 700; color: #4a5850"><i style="background: {{t.color}}" aria-hidden="true"></i><span>{{t.label}}</span><sc-if value="{{t.isFilter}}" hint-placeholder-val="{{ true }}"><svg class="sico" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16l-6 7.5V19l-4 1.5v-8z"></path></svg></sc-if></span>
+          <span class="sval" style="color: {{t.valColor}}">{{t.value}}</span>
+          <sc-if value="{{t.hasBar}}" hint-placeholder-val="{{ false }}"><span class="sbar" aria-hidden="true"><span style="width: {{t.pct}}"></span></span></sc-if>
+          <span class="ssub">{{t.sub}}</span>
+        </button>
+      </sc-for>
+    </div>
+
+    <div class="wrap">
+      <div class="tscroll">
+        <sc-if value="{{isDeals}}" hint-placeholder-val="{{ true }}">
+          <table>
+            <thead><tr><th>Deal</th><th class="num">Wells</th><th>Flags</th><th>Last update</th><th><span class="sr">Open in Pixie</span></th></tr></thead>
+            <tbody>
+              <sc-for list="{{dealRows}}" as="r" hint-placeholder-count="8">
+                <tr>
+                  <td><button class="dlink" onClick="{{r.open}}" title="View operators" aria-label="View operators for {{r.name}}">{{r.name}}<span class="dico" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"></path><path d="M20 4l-8 8"></path><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></span></button><div class="muted" style="font-size: 12px; margin-top: 3px">{{r.sub}}</div></td>
+                  <td class="num">{{r.wells}}</td>
+                  <td style="white-space: normal"><div style="display: flex; gap: 6px; flex-wrap: wrap"><sc-for list="{{r.flags}}" as="f" hint-placeholder-count="2"><span class="fl" style="border-color: {{f.border}}"><i style="background: {{f.color}}" aria-hidden="true"></i>{{f.label}}<b title="{{f.n}} operators">{{f.n}}</b></span></sc-for></div></td>
+                  <td><span>{{r.date}}</span><div class="{{r.ageCls}}" style="font-size: 12px">{{r.ago}}</div></td>
+                  <td style="text-align: right"><a class="chatbtn" href="#chat" onClick="{{r.stop}}" aria-label="Open {{r.name}} in Pixie"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg><span>Open in Pixie</span></a></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </sc-if>
+        <sc-if value="{{isRev}}" hint-placeholder-val="{{ false }}">
+          <table>
+            <thead><tr><th>Deal</th><th class="num">Owner share</th><th class="num">Actual paid</th><th class="num">Difference</th><th>Last update</th><th>Flags</th><th><span class="sr">Open in Pixie</span></th></tr></thead>
+            <tbody>
+              <sc-for list="{{revRows}}" as="r" hint-placeholder-count="8">
+                <tr>
+                  <td><button class="dlink" onClick="{{r.open}}" title="View operators" aria-label="View operators for {{r.name}}">{{r.name}}<span class="dico" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"></path><path d="M20 4l-8 8"></path><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></span></button><div class="muted" style="font-size: 12px; margin-top: 3px">{{r.sub}}</div></td>
+                  <td class="num">{{r.ownerLabel}}</td>
+                  <td class="num">{{r.paidLabel}}</td>
+                  <td class="num" style="font-weight: 600; color: {{r.diffColor}}">{{r.diffLabel}}</td>
+                  <td><span>{{r.date}}</span><div class="{{r.ageCls}}" style="font-size: 12px">{{r.ago}}</div></td>
+                  <td style="white-space: normal"><div style="display: flex; gap: 6px; flex-wrap: wrap"><sc-for list="{{r.flags}}" as="f" hint-placeholder-count="2"><span class="fl" style="border-color: {{f.border}}"><i style="background: {{f.color}}" aria-hidden="true"></i>{{f.label}}<b title="{{f.n}} wells">{{f.n}}</b></span></sc-for></div></td>
+                  <td style="text-align: right"><a class="chatbtn" href="#chat" onClick="{{r.stop}}" aria-label="Open {{r.name}} in Pixie"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg><span>Open in Pixie</span></a></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </sc-if>
+        <sc-if value="{{empty}}" hint-placeholder-val="{{ false }}"><div style="padding: 32px; text-align: center" class="muted">Nothing matches.</div></sc-if>
+      </div>
+      <div class="foot">
+        <div style="display: flex; align-items: center; gap: 2px">
+          <button class="pg" onClick="{{prev}}" disabled="{{atStart}}" aria-label="Previous page">‹</button>
+          <sc-for list="{{pages}}" as="p" hint-placeholder-count="2"><button class="{{p.cls}}" onClick="{{p.pick}}" aria-label="Page {{p.n}}">{{p.n}}</button></sc-for>
+          <button class="pg" onClick="{{next}}" disabled="{{atEnd}}" aria-label="Next page">›</button>
+        </div>
+        <span>{{from}}–{{to}} of {{total}} {{unit}}</span>
+      </div>
+    </div>
+    <sc-if value="{{hasModal}}" hint-placeholder-val="{{ false }}">
+      <div class="mback" onClick="{{closeModal}}">
+        <div class="mbox" role="dialog" aria-modal="true" aria-label="{{m.title}}" onClick="{{m.stop}}">
+          <div class="mhead">
+            <div style="min-width: 0">
+              <div style="font-size: 11.5px; font-weight: 600; color: #7a857f; text-transform: uppercase; letter-spacing: .04em">{{m.kicker}}</div>
+              <h2 style="margin: 2px 0 4px; font-size: 19px">{{m.title}}</h2>
+              
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex: none"><a class="chatbtn" href="#chat" aria-label="Open {{m.title}} in Pixie"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Open in Pixie</a><button class="mx" onClick="{{closeModal}}" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
+          </div>
+          <div class="mbody">
+            <sc-if value="{{m.isDeals}}" hint-placeholder-val="{{ true }}">
+            <table>
+              <thead><tr><th>Operator</th><th class="num">Wells</th><th>Status</th><th class="num">{{m.aHead}}</th><th class="num">{{m.bHead}}</th><th>Last update</th><th><span class="sr">Open in Pixie</span></th></tr></thead>
+              <tbody>
+                <sc-for list="{{m.ops}}" as="o" hint-placeholder-count="4">
+                  <tr>
+                    <td><b>{{o.op}}</b></td>
+                    <td class="num">{{o.wells}}</td>
+                    <td style="white-space: nowrap"><span class="fl" style="border-color: {{o.border}}; padding-right: 9px"><i style="background: {{o.color}}" aria-hidden="true"></i>{{o.status}}</span></td>
+                    <td class="num" style="white-space: nowrap; font-variant-numeric: tabular-nums">{{o.aVal}}</td>
+                    <td class="num" style="white-space: nowrap; font-variant-numeric: tabular-nums">{{o.bVal}}<sc-if value="{{o.hasPct}}" hint-placeholder-val="{{ false }}"><div style="font-size: 12px; font-weight: 600; color: {{o.pctColor}}; margin-top: 2px">{{o.pct}}</div></sc-if></td>
+                    <td style="white-space: nowrap"><span>{{o.date}}</span><div class="{{o.ageCls}}" style="font-size: 12px">{{o.ago}}</div></td>
+                    <td style="text-align: right"><a class="chatbtn" href="#chat" aria-label="Open {{o.op}} in Pixie"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Open in Pixie</a></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+            </sc-if>
+            <sc-if value="{{m.isDoT}}" hint-placeholder-val="{{ false }}">
+            <table>
+              <thead><tr><th>Operator</th><th>Flag</th></tr></thead>
+              <tbody>
+                <sc-for list="{{m.ops}}" as="o" hint-placeholder-count="3">
+                  <tr>
+                    <td><b>{{o.op}}</b></td>
+                    <td style="white-space: nowrap"><span class="fl" style="border-color: {{o.border}}; padding-right: 9px"><i style="background: {{o.color}}" aria-hidden="true"></i>{{o.status}}</span></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+            </sc-if>
+            <sc-if value="{{m.isRevT}}" hint-placeholder-val="{{ false }}">
+            <table>
+              <thead><tr><th>Operator</th><th class="num">Flagged wells</th><th>Flags</th></tr></thead>
+              <tbody>
+                <sc-for list="{{m.ops}}" as="o" hint-placeholder-count="3">
+                  <tr>
+                    <td><b>{{o.op}}</b></td>
+                    <td class="num" style="font-weight: 600">{{o.flaggedLabel}}</td>
+                    <td style="white-space: normal"><div style="display: flex; gap: 6px; flex-wrap: wrap"><sc-for list="{{o.flags}}" as="f" hint-placeholder-count="2"><span class="fl" style="border-color: {{f.border}}"><i style="background: {{f.color}}" aria-hidden="true"></i>{{f.label}}<sc-if value="{{f.hasN}}" hint-placeholder-val="{{ true }}"><b title="{{f.n}} wells">{{f.n}}</b></sc-if><sc-if value="{{f.noN}}" hint-placeholder-val="{{ false }}"><span style="width: 5px"></span></sc-if></span></sc-for></div></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+            </sc-if>
+          </div>
+          
+        </div>
+      </div>
+    </sc-if>
+  </main>
+</div>
+</script>
+<script>
+/* Minimal standalone renderer for the Pixie portfolio prototypes.
+   Supports {{path}} bindings, <sc-for list as>, <sc-if value>, on* event bindings
+   and a DCLogic base class with setState. No dependencies. */
+(function () {
+  const BOOL_ATTRS = { disabled: 1, checked: 1, selected: 1, hidden: 1 };
+  const EVENTS = { onclick: 'click', onchange: 'change', oninput: 'input', onkeydown: 'keydown' };
+  const RX = /\{\{\s*([^}]+?)\s*\}\}/g;
+
+  function lookup(scopes, path) {
+    const parts = path.split('.');
+    for (let i = scopes.length - 1; i >= 0; i--) {
+      const s = scopes[i];
+      if (s != null && typeof s === 'object' && parts[0] in s) {
+        let v = s[parts[0]];
+        for (let j = 1; j < parts.length; j++) v = v == null ? undefined : v[parts[j]];
+        return v;
+      }
+    }
+    if (parts[0] === 'true') return true;
+    if (parts[0] === 'false') return false;
+    return undefined;
+  }
+  function interp(str, scopes) {
+    const m = str.match(/^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/);
+    if (m) return lookup(scopes, m[1]);
+    return str.replace(RX, (_, p) => { const v = lookup(scopes, p); return v == null || v === false ? '' : String(v); });
+  }
+
+  function build(node, scopes, out) {
+    if (node.nodeType === 3) {
+      const t = node.nodeValue;
+      out.push(document.createTextNode(t.indexOf('{{') >= 0 ? (() => { const v = interp(t, scopes); return v == null || v === false ? '' : String(v); })() : t));
+      return;
+    }
+    if (node.nodeType !== 1) return;
+    if (node.tagName === 'TEMPLATE' && node.hasAttribute('data-sc')) {
+      const kind = node.getAttribute('data-sc');
+      if (kind === 'for') {
+        const list = interp(node.getAttribute('list') || '', scopes) || [];
+        const as = node.getAttribute('as') || 'item';
+        (Array.isArray(list) ? list : []).forEach((item) => {
+          const sc = scopes.concat([{ [as]: item }]);
+          node.content.childNodes.forEach((c) => build(c, sc, out));
+        });
+      } else if (kind === 'if') {
+        if (interp(node.getAttribute('value') || '', scopes)) node.content.childNodes.forEach((c) => build(c, scopes, out));
+      }
+      return;
+    }
+    const el = node.cloneNode(false);
+    let valueProp;
+    Array.from(node.attributes).forEach((a) => {
+      const name = a.name;
+      if (name.indexOf('hint-') === 0) { el.removeAttribute(name); return; }
+      if (EVENTS[name]) {
+        el.removeAttribute(name);
+        const fn = interp(a.value, scopes);
+        if (typeof fn === 'function') el.addEventListener(EVENTS[name], fn);
+        return;
+      }
+      if (a.value.indexOf('{{') < 0) return;
+      const v = interp(a.value, scopes);
+      if (name === 'value') { valueProp = v == null ? '' : String(v); el.setAttribute('value', valueProp); return; }
+      if (BOOL_ATTRS[name]) { if (v && v !== 'false') el.setAttribute(name, ''); else el.removeAttribute(name); return; }
+      el.setAttribute(name, v == null ? '' : String(v));
+    });
+    const kids = [];
+    const src = node.tagName === 'TEMPLATE' ? node.content.childNodes : node.childNodes;
+    src.forEach((c) => build(c, scopes, kids));
+    kids.forEach((k) => el.appendChild(k));
+    if (valueProp !== undefined && 'value' in el) el.value = valueProp;
+    out.push(el);
+  }
+
+  class DCLogic {
+    constructor() { this.state = {}; this._queued = false; }
+    setState(patch) {
+      this.state = Object.assign({}, this.state, typeof patch === 'function' ? patch(this.state) : patch);
+      if (!this._queued) { this._queued = true; Promise.resolve().then(() => { this._queued = false; this._render && this._render(); }); }
+    }
+  }
+  window.DCLogic = DCLogic;
+
+  window.mountPrototype = function (Component, templateEl, root) {
+    const tpl = document.createElement('template');
+    tpl.innerHTML = (templateEl.tagName === "SCRIPT" ? templateEl.textContent : templateEl.innerHTML)
+      .replace(/<sc-for\b/g, '<template data-sc="for"').replace(/<\/sc-for>/g, '</template>')
+      .replace(/<sc-if\b/g, '<template data-sc="if"').replace(/<\/sc-if>/g, '</template>');
+    const comp = new Component();
+    comp._render = function () {
+      const a = document.activeElement; const id = a && a.id; let s0, s1;
+      try { s0 = a.selectionStart; s1 = a.selectionEnd; } catch (e) {}
+      const vals = comp.renderVals();
+      const out = [];
+      tpl.content.childNodes.forEach((c) => build(c, [vals], out));
+      root.replaceChildren(...out);
+      if (id) { const n = document.getElementById(id); if (n) { n.focus(); try { if (s0 != null) n.setSelectionRange(s0, s1); } catch (e) {} } }
+    };
+    comp._render();
+    return comp;
+  };
+})();
+
+</script>
+<script>
+
+// One row per operator within a deal. Each operator sends one division order package (covering all its wells
+// in the deal) and the pay stubs for those wells. Wells are counted, not listed.
+// doS: awaiting (DO not received yet) | mismatch (DO ≠ deed, email drafted for you) | with_op (email sent, waiting) | ready (DO matches deed, sign + acceptance email drafted) | signed
+// rev (only after signing): awaiting (no pay stubs yet) | mismatch (pay stub issue, email drafted for you) | with_op | ok
+// since = days in the current state. All operators and well counts are sample data.
+const DEALS = [
+  {name:"GLR Partners", entity:"Covenant Longhorn LLC", basin:"Western Haynesville"},
+  {name:"Delaware Basin NPRI", entity:"Sample entity", basin:"Permian"},
+  {name:"Shelby Trough Minerals", entity:"Sample entity", basin:"Shelby Trough"},
+  {name:"Anadarko Royalty", entity:"Sample entity", basin:"Anadarko"},
+  {name:"Eagle Ford ORRI Package", entity:"Sample entity", basin:"Eagle Ford"}
+];
+const DOS = [
+  {id:"x0", deal:"GLR Partners", op:"Comstock", wells:342, doS:"mismatch", since:3, note:"4 of 342 wells: DO lists 3 interest lines, deed shows 4"},
+  {id:"x1", deal:"GLR Partners", op:"Operator K", wells:128, doS:"mismatch", since:5, note:"6 of 128 wells: NRI differs from deed"},
+  {id:"x2", deal:"GLR Partners", op:"Operator L", wells:215, doS:"mismatch", since:2, note:"9 of 215 wells: tract acreage differs from title"},
+  {id:"x3", deal:"GLR Partners", op:"Operator R", wells:96, doS:"mismatch", since:26, note:"3 of 96 wells: NRI differs from deed"},
+  {id:"x4", deal:"GLR Partners", op:"Operator S", wells:140, doS:"awaiting", since:1, note:"All 140 wells match the deed"},
+  {id:"x5", deal:"GLR Partners", op:"Operator T", wells:88, doS:"awaiting", since:4, note:"All 88 wells match the deed"},
+  {id:"x6", deal:"GLR Partners", op:"Operator U", wells:260, doS:"signed", rev:"mismatch", revType:"Decimal", since:12, note:"11 of 260 wells: paid below the signed decimal"},
+  {id:"x7", deal:"GLR Partners", op:"Operator V", wells:175, doS:"signed", rev:"ok", since:10},
+  {id:"x8", deal:"Delaware Basin NPRI", op:"Operator B", wells:410, doS:"mismatch", since:1, note:"22 of 410 wells: tract acreage differs from title"},
+  {id:"x9", deal:"Delaware Basin NPRI", op:"Operator G", wells:180, doS:"mismatch", since:6, note:"5 of 180 wells: NRI differs from deed"},
+  {id:"x10", deal:"Delaware Basin NPRI", op:"Operator N", wells:150, doS:"with_op", since:28, note:"6 of 150 wells: NRI differs from deed"},
+  {id:"x11", deal:"Delaware Basin NPRI", op:"Operator P", wells:75, doS:"with_op", since:12, note:"4 of 75 wells: tract acreage differs from title"},
+  {id:"x12", deal:"Delaware Basin NPRI", op:"Operator W", wells:120, doS:"mismatch", since:2, note:"7 of 120 wells: NRI differs from deed"},
+  {id:"x13", deal:"Delaware Basin NPRI", op:"Operator X", wells:300, doS:"signed", rev:"with_op", revType:"Volume", since:30, note:"31 of 300 wells: stub volume under Comptroller"},
+  {id:"x14", deal:"Delaware Basin NPRI", op:"Operator Y", wells:220, doS:"signed", rev:"mismatch", revType:"Volume", since:9, note:"12 of 220 wells: stub volume under Comptroller"},
+  {id:"x15", deal:"Delaware Basin NPRI", op:"Operator Z", wells:95, doS:"signed", rev:"ok", since:14},
+  {id:"x16", deal:"Shelby Trough Minerals", op:"Operator A", wells:260, doS:"with_op", since:4, note:"14 of 260 wells: NRI differs from deed"},
+  {id:"x17", deal:"Shelby Trough Minerals", op:"Operator M", wells:190, doS:"with_op", since:50, note:"8 of 190 wells: tract acreage differs from title"},
+  {id:"x18", deal:"Shelby Trough Minerals", op:"Operator AA", wells:110, doS:"with_op", since:9, note:"3 of 110 wells: NRI differs from deed"},
+  {id:"x19", deal:"Shelby Trough Minerals", op:"Operator AB", wells:140, doS:"with_op", since:22, note:"7 of 140 wells: tract acreage differs from title"},
+  {id:"x20", deal:"Shelby Trough Minerals", op:"Operator AC", wells:160, doS:"awaiting", since:3, note:"All 160 wells match the deed"},
+  {id:"x21", deal:"Shelby Trough Minerals", op:"Operator AD", wells:70, doS:"awaiting", since:6, note:"All 70 wells match the deed"},
+  {id:"x22", deal:"Shelby Trough Minerals", op:"Operator AE", wells:230, doS:"signed", rev:"mismatch", revType:"Decimal", since:16, note:"17 of 230 wells: paid at RI decimal, not ORRI"},
+  {id:"x23", deal:"Shelby Trough Minerals", op:"Operator AF", wells:130, doS:"signed", rev:"awaiting", since:20, note:"No pay stubs since approval"},
+  {id:"x24", deal:"Anadarko Royalty", op:"Operator D", wells:300, doS:"mismatch", since:2, note:"19 of 300 wells: NRI differs from deed"},
+  {id:"x25", deal:"Anadarko Royalty", op:"Operator F", wells:220, doS:"mismatch", since:7, note:"10 of 220 wells: tract acreage differs from title"},
+  {id:"x26", deal:"Anadarko Royalty", op:"Operator AG", wells:150, doS:"ready", since:1, note:"All 150 wells match the deed"},
+  {id:"x27", deal:"Anadarko Royalty", op:"Operator AH", wells:95, doS:"ready", since:3, note:"All 95 wells match the deed"},
+  {id:"x28", deal:"Anadarko Royalty", op:"Operator AI", wells:180, doS:"ready", since:5, note:"All 180 wells match the deed"},
+  {id:"x29", deal:"Anadarko Royalty", op:"Operator AJ", wells:240, doS:"signed", rev:"mismatch", revType:"Volume", since:6, note:"15 of 240 wells: stub volume under Comptroller"},
+  {id:"x30", deal:"Anadarko Royalty", op:"Operator AK", wells:205, doS:"signed", rev:"mismatch", revType:"Decimal", since:18, note:"9 of 205 wells: paid below the signed decimal"},
+  {id:"x31", deal:"Anadarko Royalty", op:"Operator AL", wells:120, doS:"signed", rev:"with_op", revType:"Decimal", since:24, note:"6 of 120 wells: paid below the signed decimal"},
+  {id:"x32", deal:"Eagle Ford ORRI Package", op:"Operator C", wells:480, doS:"awaiting", since:1, note:"26 of 480 wells: NRI differs from deed"},
+  {id:"x33", deal:"Eagle Ford ORRI Package", op:"Operator Q", wells:140, doS:"awaiting", since:5, note:"4 of 140 wells: tract acreage differs from title"},
+  {id:"x34", deal:"Eagle Ford ORRI Package", op:"Operator AM", wells:175, doS:"with_op", since:15, note:"5 of 175 wells: NRI differs from deed"},
+  {id:"x35", deal:"Eagle Ford ORRI Package", op:"Operator AN", wells:210, doS:"with_op", since:33, note:"11 of 210 wells: tract acreage differs from title"},
+  {id:"x36", deal:"Eagle Ford ORRI Package", op:"Operator AO", wells:130, doS:"with_op", since:2, note:"5 of 130 wells: tract acreage differs from title"},
+  {id:"x37", deal:"Eagle Ford ORRI Package", op:"Operator AP", wells:350, doS:"signed", rev:"mismatch", revType:"Decimal", since:8, note:"21 of 350 wells: paid at RI decimal, not ORRI"},
+  {id:"x38", deal:"Eagle Ford ORRI Package", op:"Operator AQ", wells:160, doS:"signed", rev:"ok", since:12},
+  {id:"x39", deal:"Eagle Ford ORRI Package", op:"Operator AR", wells:120, doS:"signed", rev:"ok", since:18}
+];
+DOS.forEach((d) => { d.well = d.op; });
+const OVERDUE = 21;
+const DO_STATE = {
+  awaiting: {label:"Awaiting DO", cls:"s-wait", color:"#aab6ae", owner:"op"},
+  mismatch: {label:"DO Mismatch", cls:"s-bad", color:"#b9412b", owner:"you"},
+  with_op:  {label:"With Operator", cls:"s-op", color:"#3d6fb4", owner:"op"},
+  ready:    {label:"Ready to sign", cls:"s-ready", color:"#d9922b", owner:"you"},
+  signed:   {label:"Signed", cls:"s-ok", color:"#1f7a4a", owner:"done"}
+};
+const REV_STATE = {
+  awaiting: {label:"Awaiting pay stub", cls:"s-wait", color:"#aab6ae", owner:"op"},
+  mismatch: {label:"Mismatch", cls:"s-bad", color:"#b9412b", owner:"you"},
+  with_op:  {label:"With Operator", cls:"s-op", color:"#3d6fb4", owner:"op"},
+  ok:       {label:"Correct", cls:"s-ok", color:"#1f7a4a", owner:"done"}
+};
+const DO_ORDER = ["mismatch","ready","with_op","awaiting","signed"];
+const REV_ORDER = ["mismatch","with_op","awaiting","ok"];
+const ownerOf = (d) => d.doS !== "signed" ? DO_STATE[d.doS].owner : (d.rev ? REV_STATE[d.rev].owner : "done");
+const isOverdue = (d) => (d.doS === "with_op" || (d.doS === "signed" && d.rev === "with_op")) && d.since > OVERDUE;
+const revLabel = (d) => d.rev === "mismatch" || d.rev === "with_op" ? (d.revType + " Mismatch") : REV_STATE[d.rev].label;
+const plural = (n, one, many) => n + " " + (n === 1 ? one : many);
+
+// Shared helpers for the minimal layouts
+const STEP_NAMES = ["Collect DO", "Check vs deed", "Sign", "Pay stubs", "Correct"];
+const stepOf = (x) => {
+  if (x.doS === "awaiting") return 0;
+  if (x.doS === "mismatch" || x.doS === "with_op") return 1;
+  if (x.doS === "ready") return 2;
+  if (x.rev === "ok") return 4;
+  return 3;
+};
+const statusOf = (x) => {
+  if (x.doS !== "signed") {
+    const s = DO_STATE[x.doS];
+    return { label: s.label, color: x.doS === "awaiting" ? "#7a857f" : (x.doS === "ready" ? "#93550a" : s.color) };
+  }
+  const r = REV_STATE[x.rev];
+  return { label: revLabel(x), color: x.rev === "awaiting" ? "#7a857f" : r.color };
+};
+const nextOf = (x) => {
+  if (x.doS === "awaiting") return "Request DO package";
+  if (x.doS === "mismatch") return "Send drafted email";
+  if (x.doS === "with_op") return isOverdue(x) ? "Chase operator" : "Wait for reply";
+  if (x.doS === "ready") return "Sign and send acceptance";
+  if (x.rev === "mismatch") return "Send drafted email";
+  if (x.rev === "with_op") return isOverdue(x) ? "Chase operator" : "Wait for reply";
+  if (x.rev === "awaiting") return "Wait for pay stubs";
+  return "Nothing to do";
+};
+const flagsOf = (items) => {
+  const late = items.filter(isOverdue).length;
+  const FL = [
+    ["DO Mismatch", "#b9412b", "#f0c7bd", items.filter((x) => x.doS === "mismatch").length],
+    ["Ready to sign", "#d9922b", "#f0d9b5", items.filter((x) => x.doS === "ready").length],
+    ["With Operator", "#3d6fb4", "#c8d7ee", items.filter((x) => x.doS === "with_op" || x.rev === "with_op").length],
+    ["Awaiting DO", "#8a948f", "#dfe3e1", items.filter((x) => x.doS === "awaiting").length],
+    ["Decimal Mismatch", "#b9412b", "#f0c7bd", items.filter((x) => x.rev === "mismatch" && x.revType === "Decimal").length],
+    ["Volume Mismatch", "#b9412b", "#f0c7bd", items.filter((x) => x.rev === "mismatch" && x.revType === "Volume").length],
+    ["Awaiting pay stub", "#8a948f", "#dfe3e1", items.filter((x) => x.rev === "awaiting").length],
+    ["Overdue", "#a5381f", "#e9a99a", late]
+  ].filter((f) => f[3] > 0).map(([label, color, border, n]) => ({ label, color, border, n }));
+  return FL.length ? FL : [{ label: "All clear", color: "#1f7a4a", border: "#b7dcc6", n: items.length }];
+};
+const dealSummary = (meta, all) => {
+  const items = all.filter((d) => d.deal === meta.name);
+  const you = items.filter((d) => ownerOf(d) === "you").length;
+  const op = items.filter((d) => ownerOf(d) === "op").length;
+  const late = items.filter(isOverdue).length;
+  const signed = items.filter((d) => d.doS === "signed").length;
+  const wells = items.reduce((t, x) => t + x.wells, 0);
+  const state = you ? "Needs you" : (op ? "Waiting on operator" : "Complete");
+  return { ...meta, items, you, op, late, signed, wells, state, flags: flagsOf(items), rank: you ? 0 : (late ? 1 : (op ? 2 : 3)) };
+};
+const STEP_COLOR = ["#aab6ae", "#b9412b", "#d9922b", "#3d6fb4", "#1f7a4a"];
+
+// Revenue values per deal (from Option A · Portfolio overview; sample except GLR Partners and Western Haynesville)
+const VALUES = {
+  "GLR Partners": {expected:12075, risk:9075},
+  "Delaware Basin NPRI": {expected:96400, risk:4410},
+  "Shelby Trough Minerals": {expected:48200, risk:1850},
+  "Anadarko Royalty": {expected:18900, risk:5200},
+  "Eagle Ford ORRI Package": {expected:31700, risk:2640}
+};
+const TODAY = new Date(2026, 10, 3);
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const dateOf = (days) => { const d = new Date(TODAY.getTime() - days * 86400000); return d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear(); };
+const agoOf = (days) => days === 0 ? 'today' : (days === 1 ? '1 day ago' : days + ' days ago');
+// Sample comparisons for open mismatches. DO: deed vs DO decimal (or text). Revenue: signed DO vs pay stub.
+const CMP = {
+  x0: { a: 0.015625, b: 0.011719 },
+  x1: { a: 0.01875, b: 0.017578 },
+  x2: { a: 0.009766, b: 0.008789 },
+  x6: { a: 0.0125, b: 0.01125 },
+  x8: { a: 0.009766, b: 0.009156 },
+  x9: { a: 0.02, b: 0.018 },
+  x13: { a: 12400, b: 11160, unit: ' bbl' },
+  x14: { a: 8200, b: 7790, unit: ' bbl' },
+  x16: { a: 0.01875, b: 0.016406 },
+  x22: { a: 0.02, b: 0.015 },
+  x24: { a: 0.015625, b: 0.014063 },
+  x25: { a: 0.007813, b: 0.007324 },
+  x29: { a: 9800, b: 8820, unit: ' bbl' },
+  x30: { a: 0.01, b: 0.009375 },
+  x31: { a: 0.0125, b: 0.011719 },
+  x32: { a: 0.02, b: 0.01875 },
+  x33: { a: 0.009766, b: 0.008545 },
+  x37: { a: 0.02, b: 0.016 }
+};
+const cmpOf = (x, aLabel, bLabel) => {
+  const c = CMP[x.id];
+  const scope = ((x.note || '').match(/^(\d+ of \d+ wells)/) || [])[1] || '';
+  if (!c) return { hasCmp: false, noCmp: true, aVal: '—', bVal: '—', scope: '' };
+  if (c.aText) return { hasCmp: true, noCmp: false, scope, aLabel, bLabel, hasPct: false, aVal: c.aText, bVal: c.bText, pct: '', pctColor: '#93550a', pctBg: '#fbf1e1' };
+  const fmt = (v) => c.unit ? v.toLocaleString('en-US') + c.unit : v.toFixed(6);
+  const d = (c.b - c.a) / c.a * 100;
+  return { hasCmp: true, noCmp: false, hasPct: true, scope, aLabel, bLabel, aVal: fmt(c.a), bVal: fmt(c.b),
+    pct: (d > 0 ? '+' : '−') + Math.abs(d).toFixed(2) + '%', pctColor: '#a5381f', pctBg: '#fbeae6' };
+};
+const money = (n) => '$' + Math.round(n).toLocaleString('en-US');
+const DO_FLAGS = {
+  mismatch: { flag: 'DO Mismatch', color: '#b9412b', border: '#f0c7bd', rank: 0 },
+  with_op: { flag: 'Email sent', color: '#3d6fb4', border: '#c8d7ee', rank: 1 }
+};
+// Email sent = mismatch already emailed to the operator, waiting for a corrected DO. DOs not yet received are not shown.
+// Ready-for-approval DOs are counted under Email sent
+const fk = (x) => x.doS === 'ready' ? 'with_op' : x.doS;
+const CARD_ORDER = ['total', 'mismatch', 'with_op', 'month'];
+const PAGE = 10;
+const SIGNED_FLAG = { flag: 'Approved', color: '#1f7a4a', border: '#b7dcc6', rank: 3 };
+const dayOfYear = Math.round((TODAY - new Date(TODAY.getFullYear(), 0, 1)) / 86400000);
+const RANGES = [
+  { v: 'any', label: 'All dates', max: Infinity },
+  { v: 'month', label: 'This month', max: TODAY.getDate() - 1 },
+  { v: '30', label: 'Last 30 days', max: 30 },
+  { v: '90', label: 'Last 90 days', max: 90 },
+  { v: 'year', label: 'This year', max: dayOfYear }
+];
+const signedAgo = (x) => SIGNED_AGO[x.id] == null ? 999 : SIGNED_AGO[x.id];
+const isMonth = (x) => x.doS === 'signed' && signedAgo(x) <= TODAY.getDate() - 1;
+// Sample: days since each DO was signed
+const SIGNED_AGO = { x6: 24, x7: 2, x13: 60, x14: 25, x15: 1, x22: 40, x23: 20, x29: 35, x30: 45, x31: 70, x37: 30, x38: 3, x39: 50 };
+
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const tab = st.tab || 'deals';
+    const isDeals = tab === 'deals';
+    const q = (st.q || '').toLowerCase();
+    const opF = st.opF || 'All operators';
+    const basinOf = {}; DEALS.forEach((d) => { basinOf[d.name] = d.basin; });
+
+    const stop = (e) => { if (e && e.stopPropagation) e.stopPropagation(); };
+    // Deals tab: one row per deal; flags count operator DOs
+    const doItems = DOS.filter((x) => DO_FLAGS[fk(x)]);
+    const mkSel = (stateKey, defs) => {
+      const raw = st[stateKey] || {};
+      const sel = Object.keys(raw).filter((k) => raw[k] && defs[k]);
+      return { sel, on: (k) => sel.indexOf(k) >= 0,
+        toggle: (k) => () => { const n = { ...raw }; if (n[k]) delete n[k]; else n[k] = true; this.setState({ [stateKey]: n, page: 1 }); },
+        clear: () => this.setState({ [stateKey]: {}, page: 1 }) };
+    };
+    const DEAL_DEFS = { ...DO_FLAGS };
+    // Date filter: presets on the left, custom period on the calendar
+    const DAY = 86400000;
+    const Y = TODAY.getFullYear(), M = TODAY.getMonth(), Q = Math.floor(M / 3);
+    const ymd = (y, m, d) => new Date(y, m, d).getTime();
+    const T0 = ymd(Y, M, TODAY.getDate());
+    const agoTs = (ts) => Math.round((T0 - ts) / DAY);
+    const fmtD = (ts) => { const d = new Date(ts); return String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear(); };
+    const isoD = (ts) => { const d = new Date(ts); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+    const parseD = (v) => { const [yy, mm, dd] = v.split('-').map(Number); return ymd(yy, mm - 1, dd); };
+    const shortD = (ts) => { const d = new Date(ts); return d.getDate() + ' ' + MON[d.getMonth()]; };
+    const PRESETS = {
+      this_month: ['This month', ymd(Y, M, 1), T0], last_month: ['Last month', ymd(Y, M - 1, 1), ymd(Y, M, 0)],
+      this_q: ['This quarter', ymd(Y, Q * 3, 1), T0], last_q: ['Last quarter', ymd(Y, Q * 3 - 3, 1), ymd(Y, Q * 3, 0)],
+      this_year: ['This year', ymd(Y, 0, 1), T0], last_year: ['Last year', ymd(Y - 1, 0, 1), ymd(Y - 1, 11, 31)],
+      d30: ['Last 30 days', T0 - 29 * DAY, T0], d90: ['Last 90 days', T0 - 89 * DAY, T0], m12: ['Last 12 months', ymd(Y - 1, M, TODAY.getDate() + 1), T0]
+    };
+    const PGROUPS = [['Month', ['this_month', 'last_month']], ['Quarter', ['this_q', 'last_q']], ['Year', ['this_year', 'last_year']], ['Rolling', ['d30', 'd90', 'm12']]];
+    // Default: last month
+    const dateRange = st.dateRange === undefined ? 'last_month' : (st.dateRange === 'custom' && st.dFrom != null ? 'custom' : (PRESETS[st.dateRange] ? st.dateRange : 'any'));
+    let rFrom = null, rTo = null;
+    if (dateRange === 'custom') { rFrom = st.dFrom; rTo = st.dTo == null ? st.dFrom : st.dTo; }
+    else if (dateRange !== 'any') { rFrom = PRESETS[dateRange][1]; rTo = PRESETS[dateRange][2]; }
+    const rangeMax = rFrom == null ? Infinity : agoTs(rFrom);
+    const rangeMin = rTo == null ? -Infinity : agoTs(rTo);
+    const inRange = (d) => d <= rangeMax && d >= rangeMin;
+    const keyOf = (x) => x.doS === 'signed' ? 'signed' : fk(x);
+    const daysOf = (x) => x.doS === 'signed' ? signedAgo(x) : x.since;
+    const dS = mkSel('dealSel', DEAL_DEFS);
+    // No flag selected = everything still pending; a selection matches those flags only
+    const matchKey = (k) => (dS.sel.length ? dS.on(k) : k !== 'signed');
+    const flagItems = DOS.filter((x) => DEAL_DEFS[keyOf(x)]);
+    const dealAll = DEALS.map((d) => {
+      const all = DOS.filter((x) => x.deal === d.name);
+      const items = flagItems.filter((x) => x.deal === d.name);
+      const counts = {}; Object.keys(DEAL_DEFS).forEach((k) => { counts[k] = items.filter((x) => keyOf(x) === k).length; });
+      // Approved shows only when the Approved filter is on
+      const flags = Object.keys(DEAL_DEFS).filter((k) => counts[k] > 0 && (k !== 'signed' || dS.on('signed'))).map((k) => ({ key: k, label: DEAL_DEFS[k].flag, color: DEAL_DEFS[k].color, border: DEAL_DEFS[k].border, n: counts[k] }));
+      const late = items.some((x) => x.doS !== 'signed' && isOverdue(x));
+      const inR = items.filter((x) => inRange(daysOf(x)));
+      const shownDays = (inR.length ? inR : items).map(daysOf);
+      const lastDays = shownDays.length ? Math.min.apply(null, shownDays) : 0;
+      return {
+        ...d, items, inR, counts, flags, open: () => this.setState({ modal: { name: d.name, tab: 'deals' } }), stop,
+        wells: all.filter((x) => x.doS !== 'signed' || dS.on('signed')).reduce((t, x) => t + x.wells, 0),
+        sub: 'DOs Approved: ' + all.filter((x) => x.doS === 'signed').length,
+        rank: items.length ? Math.min.apply(null, items.map((x) => DEAL_DEFS[keyOf(x)].rank)) : 9, lastDays,
+        opsText: all.map((x) => x.op).join(' '),
+        date: dateOf(lastDays), ago: agoOf(lastDays), ageCls: 'muted'
+      };
+    }).filter((r) => r.items.length);
+    const dealHas = (r, k) => r.inR.some((x) => keyOf(x) === k);
+    const dealChips = [['All', null]].concat(Object.keys(DEAL_DEFS).map((k) => [k, DEAL_DEFS[k]])).map(([k, f]) => ({
+      label: f ? f.flag : 'All', color: f ? f.color : '', hasDot: !!f, on: f ? dS.on(k) : !dS.sel.length, cls: (f ? dS.on(k) : !dS.sel.length) ? 'fopt on' : 'fopt', boxCls: (f ? dS.on(k) : !dS.sel.length) ? 'cbx on' : 'cbx',
+      count: k === 'All' ? dealAll.filter((r) => r.inR.some((x) => keyOf(x) !== 'signed')).length : dealAll.filter((r) => dealHas(r, k)).length,
+      pick: f ? dS.toggle(k) : dS.clear
+    }));
+    const dealList = dealAll.filter((r) => r.inR.some((x) => matchKey(keyOf(x))) && (!q || (r.name + ' ' + r.opsText).toLowerCase().includes(q)))
+      .sort((a, b) => a.rank - b.rank || a.lastDays - b.lastDays);
+    const pendingDeals = dealAll.filter((r) => r.items.some((x) => keyOf(x) !== 'signed')).length;
+
+    // Revenue tab: one row per deal with at least one signed DO; flags count operators
+    // Sample: flagged wells per revenue flag for each operator (one operator can have both)
+    const REVF = { 'Operator U': { decimal: 8 }, 'Operator X': { volume: 9 }, 'Operator Y': { volume: 8 }, 'Operator AE': { decimal: 11 },
+      'Operator AJ': { volume: 7, decimal: 4 }, 'Operator AK': { decimal: 9 }, 'Operator AL': { decimal: 2, volume: 1 }, 'Operator AP': { volume: 12 } };
+    const rf = (x, k) => (x.doS === 'signed' && REVF[x.op] && REVF[x.op][k]) || 0;
+    const RFLAGS = {
+      decimal: { label: 'Decimal Mismatch', color: '#b9412b', border: '#f0c7bd', test: (x) => rf(x, 'decimal') > 0 },
+      volume: { label: 'Volume Mismatch', color: '#d9922b', border: '#f0d9b5', test: (x) => rf(x, 'volume') > 0 }
+    };
+    const revAll = DEALS.map((d) => {
+      const items = DOS.filter((x) => x.deal === d.name);
+      const signed = items.filter((x) => x.doS === 'signed');
+      const v = VALUES[d.name] || { expected: null, risk: 0 };
+      const counts = {}; Object.keys(RFLAGS).forEach((k) => { counts[k] = items.filter(RFLAGS[k].test).length; });
+      // Flag counts are flagged wells
+      const wellsFor = (k) => k === 'completed' ? items.filter(RFLAGS[k].test).reduce((t, x) => t + x.wells, 0) : items.reduce((t, x) => t + rf(x, k), 0);
+      const flags = Object.keys(RFLAGS).filter((k) => counts[k] > 0).map((k) => ({ key: k, label: RFLAGS[k].label, color: RFLAGS[k].color, border: RFLAGS[k].border, n: wellsFor(k) }));
+      const sDays = signed.map((x) => x.since); const sIn = sDays.filter(inRange);
+      const lastDays = sDays.length ? Math.min.apply(null, sIn.length ? sIn : sDays) : 0;
+      const late = signed.some(isOverdue);
+      return {
+        ...d, counts, flags, noFlags: flags.length === 0, signedN: signed.length, lastDays, open: () => this.setState({ modal: { name: d.name, tab: 'revenue' } }), stop,
+        sub: '',
+        rank: counts.decimal || counts.volume ? 0 : 1,
+        expected: v.expected, risk: v.risk,
+        expectedLabel: v.expected == null ? '–' : money(v.expected), riskLabel: v.risk ? money(v.risk) : '$0',
+        ownerLabel: v.expected == null ? '–' : money(v.expected), paidLabel: v.expected == null ? '–' : money(v.expected - v.risk),
+        diffLabel: v.risk ? '−' + money(v.risk) : '$0', diffColor: v.risk ? '#a5381f' : '#7a857f',
+        riskColor: v.risk >= 1000 ? '#a5381f' : (v.risk ? '#93550a' : '#7a857f'),
+        date: dateOf(lastDays), ago: agoOf(lastDays), ageCls: 'muted'
+      };
+    }).filter((r) => r.signedN > 0);
+    const rS = mkSel('revSel', RFLAGS);
+    const revChips = [['All', null]].concat(Object.keys(RFLAGS).map((k) => [k, RFLAGS[k]])).map(([k, f]) => ({
+      label: f ? f.label : 'All', color: f ? f.color : '', hasDot: !!f, on: f ? rS.on(k) : !rS.sel.length, cls: (f ? rS.on(k) : !rS.sel.length) ? 'fopt on' : 'fopt', boxCls: (f ? rS.on(k) : !rS.sel.length) ? 'cbx on' : 'cbx',
+      count: k === 'All' ? revAll.filter((r) => inRange(r.lastDays)).length : revAll.filter((r) => inRange(r.lastDays) && r.counts[k] > 0).length,
+      pick: f ? rS.toggle(k) : rS.clear
+    }));
+    const revList = revAll.filter((r) => inRange(r.lastDays) && (!rS.sel.length || rS.sel.some((k) => r.counts[k] > 0)) && (!q || r.name.toLowerCase().includes(q)))
+      .sort((a, b) => a.rank - b.rank || b.risk - a.risk);
+
+    const list = isDeals ? dealList : revList;
+    const pagesN = Math.max(1, Math.ceil(list.length / PAGE));
+    const page = Math.min(st.page || 1, pagesN);
+    const slice = list.slice((page - 1) * PAGE, page * PAGE);
+
+    const cnt = (k) => doItems.filter((x) => fk(x) === k).length;
+    const rk = {
+      expected: money(revAll.reduce((t, r) => t + (r.expected || 0), 0)),
+      risk: money(revAll.reduce((t, r) => t + r.risk, 0)),
+      issues: revAll.filter((r) => r.counts.decimal || r.counts.volume).length
+    };
+    const wellsOf = (k) => doItems.filter((x) => fk(x) === k).reduce((t, x) => t + x.wells, 0);
+    const lateOf = (k) => doItems.filter((x) => fk(x) === k && isOverdue(x)).length;
+    const oldestOf = (k) => { const a = doItems.filter((x) => fk(x) === k).map((x) => x.since); return a.length ? Math.max.apply(null, a) : 0; };
+    const stats = isDeals
+      ? Object.keys(DO_FLAGS).map((k) => {
+          const f = DO_FLAGS[k]; const n = cnt(k); const late = lateOf(k);
+          return { key: k, label: f.flag, color: f.color, value: n, valColor: '#14231a',
+            sub: !n ? 'None' : wellsOf(k) + ' wells',
+            on: dS.on(k), cls: dS.on(k) ? 'stat on' : 'stat', pick: dS.toggle(k) };
+        }).concat((() => {
+          const done = DOS.filter((x) => x.doS === 'signed');
+          const month = done.filter((x) => (SIGNED_AGO[x.id] || 999) <= TODAY.getDate() - 1);
+          const pct = Math.round(done.length / DOS.length * 100);
+          const monthOn = dS.on('signed') && dS.sel.length === 1 && dateRange === 'this_month';
+          const pendOn = dS.on('mismatch') && dS.on('with_op') && dS.sel.length === 2;
+          return [
+            { key: 'month', label: 'Approved this month', color: '#1f7a4a', value: month.length, valColor: '#14231a',
+              sub: month.length ? month.reduce((t, x) => t + x.wells, 0) + ' wells' : 'None yet',
+              on: false, cls: 'stat static', pick: null },
+            { key: 'total', label: 'Pending DOs', color: '#3d6fb4', value: (DOS.length - done.length) + ' / ' + DOS.length, valColor: '#14231a',
+              sub: done.length + ' approved · ' + pct + '% complete', hasBar: true, pct: pct + '%',
+              on: pendOn, cls: pendOn ? 'stat on' : 'stat',
+              pick: () => this.setState({ dealSel: pendOn ? {} : { mismatch: true, with_op: true }, page: 1 }) }
+          ];
+        })())
+      : [
+          { label: 'Owner share', color: '#7a857f', value: rk.expected, valColor: '#14231a', sub: '', on: false, cls: 'stat static lowv', pick: null },
+          { label: 'Difference', color: '#b9412b', value: rk.risk === '$0' ? '$0' : '−' + rk.risk, valColor: '#a5381f', sub: '', on: false, cls: 'stat static lowv', pick: null }
+        ].concat(Object.keys(RFLAGS).filter((k) => k !== 'completed').map((k) => {
+          const its = DOS.filter(RFLAGS[k].test);
+          const late = k === 'completed' ? 0 : its.filter(isOverdue).length;
+          return { label: RFLAGS[k].label, color: RFLAGS[k].color, value: its.length, valColor: '#14231a',
+            sub: its.length ? its.reduce((t, x) => t + rf(x, k), 0) + ' flagged wells' : 'None',
+            on: rS.on(k), cls: rS.on(k) ? 'stat on' : 'stat', pick: rS.toggle(k) };
+        }));
+    const cards = isDeals ? CARD_ORDER.map((k) => stats.find((t) => t.key === k)) : stats;
+    // Popup: operator-level brief for the clicked deal
+    const md = st.modal || null;
+    const GREY = { color: '#7a857f', border: '#dfe3e1' };
+    let m = { isDoT: false, isRevT: false, aHead: '', bHead: '', title: '', kicker: '', sub: '', flags: [], ops: [], foot: '', stop };
+    if (md) {
+      const all = DOS.filter((x) => x.deal === md.name);
+      const wellsT = all.reduce((t, x) => t + x.wells, 0);
+      if (md.tab === 'deals') {
+        const row = dealAll.find((r) => r.name === md.name);
+        const shown = all.filter((x) => x.doS !== 'awaiting' && (x.doS !== 'signed' || dS.on('signed')));
+        const ops = shown.map((x) => {
+          const k = keyOf(x); const f = DEAL_DEFS[k];
+          const days = daysOf(x); const late = x.doS !== 'signed' && isOverdue(x);
+          const showCmp = x.doS === 'mismatch';
+          return { ...(showCmp ? cmpOf(x, 'Deed', 'DO') : { hasCmp: false, noCmp: true, aVal: '—', bVal: '—' }), op: x.op, wells: x.wells, status: f ? f.flag : 'Awaiting DO', color: f ? f.color : GREY.color, border: f ? f.border : GREY.border,
+            rank: f ? f.rank : 9, days,
+            note: x.doS === 'signed' ? 'DO approved, acceptance sent' : (x.note || '—'),
+            date: dateOf(days), ago: (x.doS === 'signed' ? 'approved ' : '') + agoOf(days), ageCls: 'muted' };
+        }).sort((a, b) => a.rank - b.rank || a.days - b.days);
+        m = { ...m, isDeals: false, isRev: true, isDoT: true, isRevT: false, aHead: 'Deed', bHead: 'DO', kicker: 'Division orders', title: md.name, flags: row ? row.flags : [], ops,
+          sub: plural(shown.length, 'operator', 'operators') + ' · ' + shown.reduce((t, x) => t + x.wells, 0) + ' wells',
+          foot: 'One row per operator DO package' };
+      } else {
+        const row = revAll.find((r) => r.name === md.name);
+        const signed = all.filter((x) => x.doS === 'signed');
+        const ops = signed.map((x) => {
+          const fl = ['decimal', 'volume'].filter((k) => rf(x, k) > 0).map((k) => ({ label: RFLAGS[k].label, color: RFLAGS[k].color, border: RFLAGS[k].border, n: rf(x, k), hasN: true, noN: false }));
+          const flagged = fl.reduce((t, f) => t + f.n, 0);
+          const done = x.rev === 'ok';
+          const flags = fl;
+          return { op: x.op, flags, flagged, flaggedLabel: flagged ? String(flagged) : '—',
+            rank: fl.length ? 0 : (done ? 2 : 1), days: x.since };
+        }).filter((o) => o.flags.length).sort((a, b) => a.rank - b.rank || a.days - b.days);
+        m = { ...m, isDeals: false, isRev: true, isDoT: false, isRevT: true, aHead: 'Expected', bHead: 'Pay stub', kicker: 'Revenue', title: md.name, flags: row ? row.flags : [], ops,
+          sub: plural(signed.length, 'operator', 'operators') + ' · ' + signed.reduce((t, x) => t + x.wells, 0) + ' wells',
+          foot: 'Only operators with an approved DO are checked for revenue' };
+      }
+    }
+    const menuOpen = !!st.menuOpen;
+    const opNames = Array.from(new Set(doItems.map((x) => x.op))).sort();
+    const opList = ['All operators'].concat(opNames).map((o) => ({
+      label: o, on: o === opF, cls: o === opF ? 'fopt on' : 'fopt',
+      count: o === 'All operators' ? doItems.length : doItems.filter((x) => x.op === o).length,
+      pick: () => this.setState({ opF: o, page: 1 })
+    }));
+    const activeParts = [];
+    const curSel = isDeals ? dS.sel.map((k) => DEAL_DEFS[k].flag) : rS.sel.map((k) => RFLAGS[k].label);
+    if (curSel.length) activeParts.push(curSel.length === 1 ? curSel[0] : curSel[0] + ' +' + (curSel.length - 1));
+    return {
+      hasModal: !!md, m, closeModal: () => this.setState({ modal: null }),
+      menuOpen, menuRot: menuOpen ? 'rotate(180deg)' : 'none', opList,
+      fbtnCls: 'fbtn' + (menuOpen ? ' open' : '') + (activeParts.length ? ' active' : ''),
+      hasActive: true, activeLabel: activeParts.length ? activeParts.join(' · ') : 'All',
+      secTitle: 'Flags',
+      toggleMenu: () => this.setState({ menuOpen: !menuOpen, calOpen: false }),
+      clearAll: () => this.setState(isDeals ? { dealSel: {}, dateRange: 'any', page: 1 } : { revSel: {}, dateRange: 'any', page: 1 }),
+      isDeals, isRev: !isDeals,
+      tabDeals: isDeals ? 'mtab on' : 'mtab', tabRev: isDeals ? 'mtab' : 'mtab on',
+      goDeals: () => this.setState({ tab: 'deals', page: 1, menuOpen: false }), goRev: () => this.setState({ tab: 'revenue', page: 1, menuOpen: false }),
+      dealsCount: pendingDeals, revCount: revAll.length,
+      dateRange, ...(() => {
+        const calOpen = !!st.calOpen;
+        const pFrom = st.pFrom == null ? null : st.pFrom, pTo = st.pTo == null ? null : st.pTo;
+        const calY = st.calY == null ? Y : st.calY, calM = st.calM == null ? M : st.calM;
+        const first = new Date(calY, calM, 1); const off = (first.getDay() + 6) % 7;
+        const dim = new Date(calY, calM + 1, 0).getDate(); const cells = Math.ceil((off + dim) / 7) * 7;
+        const calDays = Array.from({ length: cells }, (_, i) => {
+          const ts = ymd(calY, calM, 1 - off + i); const d = new Date(ts);
+          const edge = ts === pFrom || ts === pTo; const inr = pFrom != null && pTo != null && ts > pFrom && ts < pTo;
+          return { n: d.getDate(), future: ts > T0, aria: fmtD(ts),
+            cls: 'dday' + (d.getMonth() !== calM ? ' out' : '') + (inr ? ' inr' : '') + (edge ? ' edge' : '') + (ts === T0 && !edge ? ' today' : ''),
+            pick: () => { if (pFrom == null || pTo != null) this.setState({ pFrom: ts, pTo: null }); else if (ts < pFrom) this.setState({ pFrom: ts, pTo: pFrom }); else this.setState({ pTo: ts }); } };
+        });
+        const openAt = (rTo || T0);
+        return {
+          calOpen, calRot: calOpen ? 'rotate(180deg)' : 'none',
+          dateBtnCls: dateRange !== 'any' ? 'dbtn active' : 'dbtn',
+          dateLabel: dateRange === 'any' ? 'All dates' : (rFrom === rTo ? shortD(rFrom) + ' ' + new Date(rFrom).getFullYear() : shortD(rFrom) + ' – ' + shortD(rTo) + ' ' + new Date(rTo).getFullYear()),
+          toggleCal: () => this.setState(calOpen ? { calOpen: false } : { calOpen: true, menuOpen: false, pFrom: rFrom, pTo: rTo, calY: new Date(openAt).getFullYear(), calM: new Date(openAt).getMonth() }),
+          allCls: dateRange === 'any' ? 'dpo on' : 'dpo',
+          pickAll: () => this.setState({ dateRange: 'any', calOpen: false, page: 1 }),
+          presetGroups: PGROUPS.map(([label, keys]) => ({ label, items: keys.map((k) => ({ label: PRESETS[k][0], cls: dateRange === k ? 'dpo on' : 'dpo', pick: () => this.setState({ dateRange: k, calOpen: false, page: 1 }) })) })),
+          fromLabel: pFrom == null ? 'Start date' : fmtD(pFrom), toLabel: pTo == null ? (pFrom == null ? 'End date' : fmtD(pFrom)) : fmtD(pTo),
+          fromCls: 'dfield' + (pFrom == null ? ' ph' : '') + (pFrom == null || pTo != null ? ' act' : ''),
+          toCls: 'dfield' + (pTo == null ? ' ph' : '') + (pFrom != null && pTo == null ? ' act' : ''),
+          calTitle: ['January','February','March','April','May','June','July','August','September','October','November','December'][calM] + ' ' + calY,
+          prevMonth: () => this.setState(calM === 0 ? { calM: 11, calY: calY - 1 } : { calM: calM - 1 }),
+          nextMonth: () => this.setState(calM === 11 ? { calM: 0, calY: calY + 1 } : { calM: calM + 1 }),
+          nextOff: calY > Y || (calY === Y && calM >= M),
+          weekDays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], calDays,
+          fromVal: pFrom == null ? '' : isoD(pFrom), toVal: pTo == null ? '' : isoD(pTo), todayVal: isoD(T0), toMax: pTo == null ? isoD(T0) : isoD(pTo),
+          onFrom: (e) => { const v = e.target.value; this.setState({ pFrom: v ? parseD(v) : null }); },
+          onTo: (e) => { const v = e.target.value; this.setState({ pTo: v ? parseD(v) : null }); },
+          clearCal: () => this.setState({ pFrom: null, pTo: null, dateRange: 'any', calOpen: false, page: 1 }),
+          rangeText: pFrom == null ? 'Pick a start date' : (pTo == null ? shortD(pFrom) + ' – pick an end date' : shortD(pFrom) + ' – ' + shortD(pTo) + ' ' + new Date(pTo).getFullYear()),
+          applyOff: pFrom == null && pTo == null,
+          applyCal: () => { const f = pFrom == null ? pTo : pFrom; const t = pTo == null ? (pFrom == null ? null : T0) : pTo; this.setState(f == null ? { calOpen: false } : { dateRange: 'custom', dFrom: Math.min(f, t, T0), dTo: Math.min(Math.max(f, t), T0), calOpen: false, page: 1 }); }
+        };
+      })(),
+      rangeOpts: RANGES.map((r) => ({ v: r.v, label: r.label })),
+      dateCls: dateRange !== 'any' ? 'datef active' : 'datef',
+      onRange: (e) => this.setState({ dateRange: e.target.value, page: 1 }),
+      stats: cards.map((t) => ({ ...t, isFilter: !!t.pick, actLabel: t.on ? 'Filtering' : 'Filter', tip: t.pick ? (t.on ? 'Click to remove this filter' : 'Click to show only ' + t.label + ' in the list') : '' })),
+      hint: stats.some((t) => t.on) ? 'Showing selected flags only. Click a highlighted card again to remove its filter.' : 'Click a flag card to filter the list below. Select more than one to combine.', statCols: cards.length,
+      subtitle: isDeals
+        ? cnt('mismatch') + ' DO mismatches · ' + cnt('with_op') + ' emails sent'
+        : rk.risk + ' at risk across ' + revAll.filter((r) => r.risk > 0).length + ' deals · ' + rk.issues + ' deals with revenue issues',
+      chips: isDeals ? dealChips : revChips,
+      dealRows: isDeals ? slice : [], revRows: isDeals ? [] : slice, empty: !slice.length, rk,
+      searchPh: 'Search',
+      opOpts: ['All operators'].concat(Array.from(new Set(doItems.map((x) => x.op))).sort()), opF, q: st.q || '',
+      onOp: (e) => this.setState({ opF: e.target.value, page: 1 }), onQ: (e) => this.setState({ q: e.target.value, page: 1 }),
+      pages: Array.from({ length: pagesN }, (_, i) => ({ n: i + 1, cls: i + 1 === page ? 'pg on' : 'pg', pick: () => this.setState({ page: i + 1 }) })),
+      atStart: page === 1, atEnd: page === pagesN,
+      prev: () => this.setState({ page: Math.max(1, page - 1) }), next: () => this.setState({ page: Math.min(pagesN, page + 1) }),
+      from: list.length ? (page - 1) * PAGE + 1 : 0, to: Math.min(page * PAGE, list.length), total: list.length,
+      unit: 'deals'
+    };
+  }
+}
+
+mountPrototype(Component, document.getElementById('tpl'), document.getElementById('app'));
+</script>
+</body>
+</html>
